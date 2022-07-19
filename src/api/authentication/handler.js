@@ -11,6 +11,11 @@ class AuthenticationHandler {
     this.getUser = this.getUser.bind(this);
   }
 
+ #generateToken(payload) {
+    return Jwt.token.generate(payload, process.env.TOKEN_KEY)
+  }
+ 
+
   async postRegister(request, h) {
      this.#validator.validateRegisterPayload(request.payload);
     const { email, name, password } = request.payload;
@@ -42,6 +47,7 @@ class AuthenticationHandler {
       },
     };
   }
+  
 
   async getUser(request, h) {
     const { id } = request.params;
