@@ -12,10 +12,15 @@ const AuthenticationValidator = require('./validator/authentication');
 const products = require('./api/products');
 const ProductsService = require('./services/mysql/ProductsService');
 const ProductsValidator = require('./validator/products');
+const StorageService = require('./services/storage/StorageService');
+const path = require('path');
+
 const init = async () => {
   const database = new Database();
   const authenticationService = new AuthenticationService(database);
   const productsService = new ProductsService(database);
+  const storageService = new StorageService(path.resolve(__dirname, '/api/products/images'));
+
   const server = Hapi.server({
     host: process.env.HOST,
     port: process.env.PORT,
@@ -69,12 +74,13 @@ const init = async () => {
     {
       plugin: products,
       options: {
-        service: productsService,
+        productsService,
+        storageService,
         validator: ProductsValidator,
       },
-
     },
   ]);
+
  // extension
   server.ext('onPreResponse', (request, h) => {
     const {response} = request;
