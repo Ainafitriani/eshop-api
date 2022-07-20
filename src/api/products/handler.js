@@ -15,6 +15,7 @@ class ProductsHandler {
     this.getProductById = this.getProductById.bind(this);
     this.putProductById = this.putProductById.bind(this);
     this.deleteProductById = this.deleteProductById.bind(this);
+    this.putProductImageById = this.putProductImageById.bind(this);
   }
 
   async postProduct(request, h) {}
@@ -102,7 +103,7 @@ class ProductsHandler {
     const nameId = `productImage-${nanoid(16)}`;
     const filename = await this.#storageService.writeFile(image, image.hapi, nameId);
     const oldFileName = await this.#productsService.updateProductImageById(id, filename);
-
+    console.log(oldFileName);
     if (oldFileName != null) {
       await this.#storageService.deleteFile(oldFileName);
     }
@@ -115,4 +116,66 @@ class ProductsHandler {
 
 }
 
-module.exports = ProductsHandler;
+module.exports = ProductsHandler;const path = require('path');
+
+const routes = (handler) => [
+  {
+    method: 'POST',
+    path: '/products',
+    handler: handler.postProduct,
+    options: {
+      auth: 'eshop_jwt',
+    },
+  },
+  {
+    method: 'GET',
+    path: '/products',
+    handler: handler.getProducts,
+  },
+  {
+    method: 'GET',
+    path: '/products/{id}',
+    handler: handler.getProductById,
+  },
+  {
+    method: 'PUT',
+    path: '/products/{id}',
+    handler: handler.putProductById,
+    options: {
+      auth: 'eshop_jwt',
+    },
+  },
+  {
+    method: 'DELETE',
+    path: '/products/{id}',
+    handler: handler.deleteProductById,
+    options: {
+      auth: 'eshop_jwt',
+    },
+  },
+  {
+    method: 'PUT',
+    path: '/products/{id}/image',
+    handler: handler.putProductImageById,
+    options: {
+      auth: 'eshop_jwt',
+      payload :{
+      allow: 'multipart/form-data',
+      multipart: true,
+      output: 'stream',
+      maxBytes: 512000,
+      }
+    },
+  },
+  {
+    method: 'GET',
+    path: '/products/image/{param*}',
+    handler:{
+      directory: {
+        path: path.resolve(__dirname, '/images')
+      },
+    },
+  },
+];
+
+module.exports = routes;

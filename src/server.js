@@ -2,12 +2,14 @@ require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
+const inert = require('@hapi/inert');
 // authentication
 const authentication = require('./api/authentication');
 const Database = require('./conf/Database');
 const ClientError = require('./exceptions/ClientError');
 const AuthenticationService = require('./services/mysql/AuthenticationService');
 const AuthenticationValidator = require('./validator/authentication');
+
 //products
 const products = require('./api/products');
 const ProductsService = require('./services/mysql/ProductsService');
@@ -44,6 +46,9 @@ const init = async () => {
     {
       plugin: Jwt,
     },
+    {
+     plugin: inert, 
+    }
   ]);
 
 // defines authentication strategy

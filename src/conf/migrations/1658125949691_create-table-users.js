@@ -8,4 +8,4 @@ module.exports = {
         PRIMARY KEY (id)
     )`,
     "down": "DROP TABLE products"
-  }
+}

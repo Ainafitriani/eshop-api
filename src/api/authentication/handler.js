@@ -1,3 +1,6 @@
+const { valid } = require("joi");
+const Jwt = require('@hapi/jwt');
+
 class AuthenticationHandler {
   #service;
   #validator;
@@ -39,11 +42,15 @@ class AuthenticationHandler {
 
     const { id } = await this.#service.login(email, password)
 
+    const payloadToken = { id, email, role }; // data yang ada di token
+    const token = this.#generateToken(payloadToken);  // meng generate token
+
     return {
       status: 'success',
       message: 'User berhasil login',
       data: {
         id,
+        token, // mengembalikan response
       },
     };
   }
