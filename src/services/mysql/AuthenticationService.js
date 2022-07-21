@@ -1,8 +1,9 @@
 const {nanoid} = require('nanoid');
 const bcrypt = require('bcrypt');
-const AuthenticationError = require('../../exceptions/AuthenticationError');
 const InvariantError = require('../../exceptions/InvariantError');
+const AuthenticationError = require('../../exceptions/AuthenticationError');
 const NotFoundError = require('../../exceptions/NotFoundError');
+
 class AuthenticationService {
     #database;
   
@@ -10,15 +11,15 @@ class AuthenticationService {
       this.#database = database;
     }
     
-  async #verifyUserEmail(email) {
-    const query = `SELECT email FROM users WHERE email = '${email}'`;
-
-    const result = await this.#database.query(query);
-
-    if (result.length > 0 || result.affectedRows > 0) {
-      throw new InvariantError('Gagal menambahkan user, email telah digunakan');
+    async #verifyUserEmail(email) {
+        const query = `SELECT email FROM users WHERE email = '${email}'`;
+    
+        const result = await this.#database.query(query);
+    
+        if (result.length > 0 || result.affectedRows > 0) {
+          throw new InvariantError('Gagal menambahkan user, email telah digunakan');
+        }
     }
-  }
 
     async register(email, name, password) {
         await this.#verifyUserEmail(email);
@@ -37,8 +38,21 @@ class AuthenticationService {
         }
     
         return id;
-      }
-      async login(email, password) {
+    }
+
+    async getUserById(userId) {
+        const query = `SELECT name, email FROM users WHERE id = '${userId}'`;
+    
+        const result = await this.#database.query(query);
+    
+        if (!result || result.length < 1 || result.affectedRows < 1) {
+          throw new NotFoundError('User tidak ditemukan');
+        }
+    
+        return result[0];
+    }
+
+    async login(email, password) {
         const query = `SELECT id, email, password, role FROM users WHERE email = '${email}'`;
     
         const result = await this.#database.query(query);
@@ -56,21 +70,8 @@ class AuthenticationService {
         }
     
         return { id, role };
-      }
-      async getUserById(userId) {
-        const query = `SELECT name, email FROM users WHERE id = '${userId}'`;
-    
-        const result = await this.#database.query(query);
-    
-        if (!result || result.length < 1 || result.affectedRows < 1) {
-          throw new NotFoundError('User tidak ditemukan');
-        }
-    
-        return result[0];
-      }
-    
+    }
 
   }
-
   
   module.exports = AuthenticationService;

@@ -41,23 +41,25 @@ const routes = (handler) => [
     handler: handler.putProductImageById,
     options: {
       auth: 'eshop_jwt',
-      payload :{
-      allow: 'multipart/form-data',
-      multipart: true,
-      output: 'stream',
-      maxBytes: 512000,
-      }
+      payload: {
+        allow: 'multipart/form-data',
+        multipart: true,
+        output: 'stream',
+        maxBytes: 512000,
+      },
     },
   },
   {
     method: 'GET',
     path: '/products/image/{param*}',
-    handler:{
+    handler: {
       directory: {
-        path: path.resolve(__dirname, '/images')
+        path: path.resolve(__dirname, 'images'),
       },
     },
   },
+
+
 ];
 
 module.exports = routes;
