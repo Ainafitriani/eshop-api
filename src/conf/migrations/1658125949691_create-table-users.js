@@ -1,11 +1,10 @@
 module.exports = {
-    "up": `CREATE TABLE products (
-        id VARCHAR(50) NOT NULL,
-        title TEXT NOT NULL,
-        price INTEGER NOT NULL,
-        description TEXT,
-        image TEXT,
-        PRIMARY KEY (id)
-    )`,
-    "down": "DROP TABLE products"
+    "up": `CREATE TABLE users (
+            id VARCHAR(50) NOT NULL,
+            email TEXT NOT NULL,
+            name TEXT NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL,
+            PRIMARY KEY (id))`,
+    "down": "DROP TABLE users"
 }
