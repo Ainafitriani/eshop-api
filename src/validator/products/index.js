@@ -8,11 +8,14 @@ const ProductsValidator = {
       throw new InvariantError(validationResult.error.message);
     }
   },
+
   validateProductImageHeader: (header) => {
-    const validationResult = ProductsImageSchema.validate(header);
+    const validationResult = ProductImageHeaderSchema.validate(header);
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);
-    }},
+    }
+  },
+  
 };
 
 module.exports = ProductsValidator;
