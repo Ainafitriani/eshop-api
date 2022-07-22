@@ -2,17 +2,17 @@ const fs = require('fs');
 const path = require('path');
 
 class StorageService {
-    #folder;
+  #folder;
 
-    constructor(folder){
-        this.#folder = folder;
+  constructor(folder) {
+    this.#folder = folder;
 
-        if(!fs.existsSync(folder)) {
-            fs.mkdirSync(folder, {recursive: true})
-        }
+    if (!fs.existsSync(folder)) {
+      fs.mkdirSync(folder, {recursive: true});
     }
+  }
 
-     // method untuk membuat file baru ke dalam server
+  // method untuk membuat file baru ke dalam server
   writeFile(file, meta, nameId) {
     const fileExt = meta.filename.split('.').pop();
 
@@ -27,6 +27,13 @@ class StorageService {
       file.on('end', () => resolve(filename));
     });
   }
+
+  // method untuk menghapus file dari server
+  deleteFile(filename) {
+    fs.unlinkSync(`${this.#folder}/${filename}`);
+  }
+
+  
 }
 
 module.exports = StorageService;

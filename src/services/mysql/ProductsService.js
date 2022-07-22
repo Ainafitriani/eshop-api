@@ -1,7 +1,7 @@
 const { nanoid } = require("nanoid");
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
-//
+
 class ProductsService {
     #database;
   
@@ -93,4 +93,4 @@ class ProductsService {
     
   }
   
-  module.exports = ProductsService;np
+  module.exports = ProductsService;
